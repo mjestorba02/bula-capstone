@@ -29,5 +29,5 @@ return $local + [
   'from_email'   => getenv('SMTP_FROM_EMAIL') ?: '',     // usually the same Gmail address
   'from_name'    => getenv('SMTP_FROM_NAME') ?: 'Payment System',
   'timeout'      => 20,
-  'dev_fallback' => false,
+  'dev_fallback' => filter_var(getenv('OTP_DEMO_MODE') ?: 'false', FILTER_VALIDATE_BOOLEAN),
 ];

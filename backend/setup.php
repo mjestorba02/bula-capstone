@@ -2,13 +2,13 @@
 declare(strict_types=1);
 $host = getenv('DB_HOST') ?: (getenv('DOCKER_ENV') ? 'db' : 'localhost');
 $db = getenv('DB_DATABASE') ?: (getenv('DB_NAME') ?: 'bestlink_student_system');
-$user = getenv('DB_USER') ?: 'root';
-$pass = getenv('DB_PASS') !== false ? (string)getenv('DB_PASS') : ((getenv('DOCKER_ENV')) ? 'root' : '');
+$user = getenv('DB_USER') ?: (getenv('DB_USERNAME') ?: 'root');
+$pass = getenv('DB_PASS') !== false ? (string)getenv('DB_PASS') : (getenv('DB_PASSWORD') !== false ? (string)getenv('DB_PASSWORD') : ((getenv('DOCKER_ENV')) ? 'root' : ''));
 $port = (int)(getenv('DB_PORT') ?: 3306);
 header('Content-Type:text/plain; charset=utf-8');
 try {
   $pdo = new PDO("mysql:host=$host;port=$port;charset=utf8mb4", $user, $pass, [PDO::ATTR_ERRMODE=>PDO::ERRMODE_EXCEPTION, PDO::ATTR_DEFAULT_FETCH_MODE=>PDO::FETCH_ASSOC]);
-  $pdo->exec("CREATE DATABASE IF NOT EXISTS `$db` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci");
+  try { $pdo->exec("CREATE DATABASE IF NOT EXISTS `$db` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci"); } catch(Throwable $e) { /* managed DB: already exists */ }
   $pdo->exec("USE `$db`");
   $pdo->exec("CREATE TABLE IF NOT EXISTS users(
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
