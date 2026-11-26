@@ -1,0 +1,7 @@
+.env
+backend/mail_config.local.php
+backend/uploads/**/*
+!backend/uploads/**/.htaccess
+!backend/uploads/**/
+health.zip
+*.log

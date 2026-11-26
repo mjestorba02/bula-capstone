@@ -1,0 +1,41 @@
+BESTLINK SMART PAYMENT PORTAL
+HelloMoney / QR Ph Payment Flow
+
+WHAT WAS ADDED
+1. Student selects a fee and amount.
+2. Selecting "Hello Money App (HMA)" opens a QR Ph checkout section.
+3. The system creates a unique payment reference and a 30-minute payment record.
+4. LIVE MODE:
+   - Set PAYMONGO_SECRET_KEY and PAYMONGO_PUBLIC_KEY.
+   - Set HELLOMONEY_MODE=live.
+   - The backend creates a QR Ph Payment Intent and displays the returned QR.
+   - The student scans the QR using HelloMoney (HelloMoney supports QR Ph scanning).
+   - The portal polls the provider and marks the payment Paid after the provider reports success.
+   - An electronic receipt is generated and stored in backend/uploads/payment_receipts.
+5. DEMO MODE (default):
+   - No real money is collected.
+   - A demo QR is shown so the capstone flow can be demonstrated safely.
+   - Use "Simulate HelloMoney Confirmation (Demo)" to demonstrate the automatic status/receipt part.
+   - This demo QR must NOT be presented as a real merchant QR.
+
+IMPORTANT FOR LIVE DEPLOYMENT
+HelloMoney is the payer app. For real school collection, the school needs a merchant-side QR Ph/acquirer/payment-provider arrangement and valid credentials. The system is prepared for a QR Ph provider flow; do not put secret keys in frontend JavaScript.
+
+ENVIRONMENT
+HELLOMONEY_MODE=demo
+PAYMONGO_SECRET_KEY=
+PAYMONGO_PUBLIC_KEY=
+
+For XAMPP, configure these environment variables in Apache/PHP or use your hosting environment settings.
+Do not commit live secret keys into the ZIP.
+
+EXISTING FUNCTIONS PRESERVED
+- Student/Admin login
+- Student payment history
+- Proof upload for non-QR methods
+- Automatic payment references
+- Payment verification
+- Discount & Scholarship requests
+- Balance/assessment computation
+- SOA/PDF
+- Existing BCP logo and UI

@@ -1,0 +1,67 @@
+BESTLINK SMART PAYMENT PORTAL - REAL QR PH / HELLOMONEY SETUP
+
+This update keeps the existing demo flow, but adds a real provider-backed QR Ph flow using PayMongo.
+HelloMoney can scan QR Ph because QR Ph is an interoperable Philippine payment standard.
+
+MODES
+1) demo  - current capstone demo QR; no real money.
+2) test  - PayMongo TEST QR Ph. This is a real provider workflow, but NO real money is moved.
+3) live  - PayMongo LIVE QR Ph. Real customer funds are collected into the school's merchant account.
+
+IMPORTANT
+- The school must have its own PayMongo merchant account and QR Ph capability before live collection.
+- Never put a secret API key in index.html or any JavaScript file.
+- Use HTTPS for the live website and webhook.
+- The webhook URL must be publicly reachable; localhost/XAMPP alone cannot receive provider webhooks.
+
+ENVIRONMENT VARIABLES
+
+HELLOMONEY_MODE=test
+PAYMONGO_TEST_SECRET_KEY=sk_test_xxxxxxxxxxxxxxxxx
+PAYMONGO_TEST_PUBLIC_KEY=pk_test_xxxxxxxxxxxxxxxxx
+PAYMONGO_LIVE_SECRET_KEY=sk_live_xxxxxxxxxxxxxxxxx
+PAYMONGO_LIVE_PUBLIC_KEY=pk_live_xxxxxxxxxxxxxxxxx
+PAYMONGO_WEBHOOK_SECRET=whsk_xxxxxxxxxxxxxxxxx
+
+Only the keys for the selected mode are used. Keep the others empty if not needed.
+For backwards compatibility, HELLOMONEY_MODE=live may also use PAYMONGO_SECRET_KEY and PAYMONGO_PUBLIC_KEY.
+
+PAYMONGO WEBHOOK
+Create ONE endpoint for each environment (test and live) in the PayMongo Dashboard:
+Developer Tools -> Webhooks -> Add Endpoint
+
+Endpoint:
+https://YOUR-DOMAIN/backend/paymongo_webhook.php
+
+Subscribe to:
+- payment.paid
+- payment.failed
+- qrph.expired (optional but recommended)
+- qr.paid / qr.expired if your account uses the QR resource events
+
+Copy the webhook endpoint's signing secret into PAYMONGO_WEBHOOK_SECRET for that environment.
+The system verifies the Paymongo-Signature header before changing a payment to Paid.
+
+HOW THE LIVE FLOW WORKS
+Student -> selects fee -> selects Prelim/Midterm/Finals -> enters amount -> HelloMoney/QR Ph
+-> PayMongo creates a dynamic QR -> student scans in HelloMoney -> payment provider confirms
+-> PayMongo webhook -> portal verifies webhook -> payment becomes Paid -> balance updates -> receipt generated.
+
+LOCAL XAMPP TESTING
+For local testing without a public HTTPS webhook, use HELLOMONEY_MODE=test and the portal's
+status polling. The test provider workflow can be exercised without real money. Webhook delivery
+itself requires a public HTTPS URL (a staging domain or secure tunnel).
+
+LIVE CHECKLIST
+- School merchant account approved/activated
+- QR Ph enabled for the merchant account
+- Live secret/public keys stored only as server environment variables
+- Live webhook endpoint registered and signing secret configured
+- HTTPS enabled
+- Test mode successfully completed first
+- Do not use the demo confirmation button in test/live mode
+
+REFERENCE
+QR Ph is the BSP national QR standard and is interoperable across participating banks/e-wallets.
+PayMongo's current QR Ph documentation describes dynamic QR creation through Payment Intents and
+payment confirmation through webhook events such as payment.paid.
