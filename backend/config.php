@@ -43,11 +43,8 @@ header('Referrer-Policy: strict-origin-when-cross-origin');
 
 
 // Docker Compose: DB_HOST=db. XAMPP: DB_HOST=localhost.
-$host = getenv('DB_HOST') ?: (getenv('DOCKER_ENV') ? 'db' : 'localhost');
-$db = getenv('DB_DATABASE') ?: (getenv('DB_NAME') ?: 'bestlink_student_system');
-$user = getenv('DB_USER') ?: (getenv('DB_USERNAME') ?: 'root');
-$pass = getenv('DB_PASS') !== false ? (string)getenv('DB_PASS') : (getenv('DB_PASSWORD') !== false ? (string)getenv('DB_PASSWORD') : ((getenv('DOCKER_ENV')) ? 'root' : ''));
-$port = (int)(getenv('DB_PORT') ?: 3306);
+require_once __DIR__.'/db_env.php';
+['host'=>$host,'port'=>$port,'name'=>$db,'user'=>$user,'pass'=>$pass] = db_env();
 $charset = 'utf8mb4';
 
 header('Content-Type: application/json; charset=utf-8');

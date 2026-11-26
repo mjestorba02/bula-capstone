@@ -4,11 +4,8 @@
 // default accounts without touching existing records).
 declare(strict_types=1);
 
-$host = getenv('DB_HOST') ?: 'db';
-$port = (int)(getenv('DB_PORT') ?: 3306);
-$db   = getenv('DB_DATABASE') ?: (getenv('DB_NAME') ?: 'bestlink_student_system');
-$user = getenv('DB_USER') ?: (getenv('DB_USERNAME') ?: 'root');
-$pass = getenv('DB_PASS') !== false ? (string)getenv('DB_PASS') : (string)(getenv('DB_PASSWORD') ?: '');
+require_once __DIR__ . '/../backend/db_env.php';
+['host'=>$host,'port'=>$port,'name'=>$db,'user'=>$user,'pass'=>$pass] = db_env();
 
 $pdo = null;
 for ($i = 1; $i <= 30; $i++) {

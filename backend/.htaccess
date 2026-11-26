@@ -1,4 +1,4 @@
 # Configuration and library files are included by PHP only; never serve them directly.
-<FilesMatch "^(mail_config|mailer|otp_lib|analytics_lib|report_writers)\.php$">
+<FilesMatch "^(mail_config|mail_config.local|mailer|otp_lib|analytics_lib|report_writers|db_env)\.php$">
   Require all denied
 </FilesMatch>
